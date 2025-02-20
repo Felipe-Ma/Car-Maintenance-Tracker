@@ -8,3 +8,23 @@ services:
       - .:/app
     environment: # Sets the environment variables (Enable debug mode)
       - FLASK_ENV=development
+      - DATABASE_HOST=db
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=rootpassword
+      - DATABASE_NAME=car_maintenance
+    depends_on:
+      - db  # Ensures the database starts before the app
+
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: car_maintenance
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"  # Expose MySQL for external tools like MySQL Workbench
+
+volumes:
+  mysql_data:  # Named volume for MySQL data persistence
