@@ -1,6 +1,6 @@
-from flask import Flask, render_template
+from flask import Flask, render_template # Flask 
 
-app = Flask(__name__)
+app = Flask(__name__) # Create a instance of Flask
 
 @app.route("/")
 def home():
@@ -8,4 +8,4 @@ def home():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0", port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

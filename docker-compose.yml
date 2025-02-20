@@ -1,10 +1,10 @@
-version: '3.8'
+version: '3.8' # specify docker-compose version
 services:
-  web:
-    build: .
-    ports:
+  web: # Define a service called web (our flask app)
+    build: . # Instructs docker to build an image using the dockerfile in the current directory
+    ports: # Maps the 5000 port of the host machine to the 5000 port of the container
       - "5000:5000"
-    volumes:
+    volumes: # Mounts the current directory on the host to /app in the container
       - .:/app
-    environment:
+    environment: # Sets the environment variables (Enable debug mode)
       - FLASK_ENV=development
