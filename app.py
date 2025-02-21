@@ -10,6 +10,22 @@ db_config = {
     "database": os.environ.get("DATABASE_NAME", "car_maintenance")
 }
 
+def initialize_database():
+    """Checks if tables exist and creates them if missing."""
+    connection = mysql.connector.connect(**db_config)
+    cursor = connection.cursor()
+
+    # Check if cars table exists
+    cursor.execute("SHOW TABLES LIKE 'cars'")
+    result = cursor.fetchone()
+    if not result:
+        print("⚠️ Tables missing! Run `init.sql` manually or restart MySQL.")
+
+    cursor.close()
+    connection.close()
+
+
+
 # Retry database connection until MySQL is ready
 attempts = 10
 while attempts > 0:
@@ -25,6 +41,9 @@ while attempts > 0:
 if attempts == 0:
     print("❌ Could not connect to MySQL. Exiting.")
     exit(1)  # Exit Flask if DB connection fails
+
+# Run table check on startup
+initialize_database()
 
 app = Flask(__name__) # Create a instance of Flask
 

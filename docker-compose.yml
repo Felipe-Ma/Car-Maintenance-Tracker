@@ -23,6 +23,8 @@ services:
       MYSQL_DATABASE: car_maintenance
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Mounts the SQL script
+
     ports:
       - "3306:3306"  # Expose MySQL for external tools like MySQL Workbench
 
