@@ -1,7 +1,8 @@
-from flask import Flask, render_template # Flask 
+from flask import Flask, render_template, jsonify, request
 import os 
 import time
 import mysql.connector
+import db_handler
 
 db_config = {
     "host": os.environ.get("DATABASE_HOST", "localhost"),
@@ -9,6 +10,9 @@ db_config = {
     "password": os.environ.get("DATABASE_PASSWORD", "rootpassword"),
     "database": os.environ.get("DATABASE_NAME", "car_maintenance")
 }
+
+db_handler.create_tables_if_missing()
+
 
 def initialize_database():
     """Checks if tables exist and creates them if missing."""
@@ -50,6 +54,21 @@ app = Flask(__name__) # Create a instance of Flask
 @app.route("/")
 def home():
     return "<h1> Car Maintenance Tracker </h1>"
+
+# ✅ Add a new car
+@app.route("/add_car", methods=["POST"])
+def add_car():
+    data = request.json
+    car_id = db_handler.add_car(data["make"], data["model"], data["year"], data["vin"])
+    if car_id:
+        return jsonify({"message": "Car added successfully!", "car_id": car_id}), 201
+    return jsonify({"error": "Failed to add car"}), 500
+
+# ✅ Get all cars
+@app.route("/cars", methods=["GET"])
+def get_cars():
+    cars = db_handler.get_all_cars()
+    return jsonify(cars)
 
 
 if __name__ == "__main__":
